@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 登录 | JumpServer</title>
+    <link rel="shortcut icon" href="/static/img/facio.ico" type="image/x-icon">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+                <h1 class="logo-name"><img src="/static/img/logo.png"></h1>
+            </div>
+            {% if error %}
+                <div class="alert alert-danger text-center">{{ error }}</div>
+            {% endif %}
+            <h2>Welcome to JumpServer</h2>
+            <form class="m-t" role="form" method="post" action="">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="length[6~50]">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="Password" required="">
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="smscode" class="form-control" placeholder="smscode" required="">
+                    <input type="button" id="btn" value="获取验证码" onclick="sendemail()" />
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+
+                <a href="{% url 'password_forget' %}"><small>Forgot password? </small></a>
+            </form>
+            <p class="m-t"> <small><b>Copyright</b> Jumpserver.org Organization © 2014-2015</small> </p>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="/static/js/jquery-2.1.1.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+var countdown=60;
+function sendemail(){
+    var obj = $("#btn");
+    settime(obj);
+
+	    $.ajax({
+                url:"/Sendmessage/",
+                type:"POST",
+                dataType:"json",
+                data:{
+                    username:$('#username').val()
+                },
+                success:function(data){
+					alert(data["message"])
+                },
+                error:function() {
+                alert("error13")
+                }
+            });
+
+    }
+function settime(obj) { //发送验证码倒计时
+    if (countdown == 0) {
+        obj.attr('disabled',false);
+        //obj.removeattr("disabled");
+        obj.val("免费获取验证码");
+        countdown = 60;
+        return;
+    } else {
+        obj.attr('disabled',true);
+        obj.val("重新发送(" + countdown + ")");
+        countdown--;
+    }
+setTimeout(function() {
+    settime(obj) }
+    ,1000)
+}
+</script>
+<body>
+
+
+
+</body>
+
+</html>
+
